@@ -5,30 +5,52 @@
 <title>SteelCycle wireframe — morning dispatch list</title>
 <style>
   :root {
-    --ink: #1c1c1c;
-    --muted: #5c5c5c;
-    --line: #2a2a2a;
-    --fill: #f4f4f2;
+    --ink: #17324d;
+    --muted: #5d7080;
+    --line: #d5e0e8;
+    --fill: #f4f7f9;
     --paper: #fff;
-    --flag: #1c1c1c;
-    --soft: #e7e7e4;
+    --teal: #1f6f86;
+    --orange: #c45c32;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    background: #e8e8e6;
+    background: #e7eef3;
     color: var(--ink);
     font-family: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
     font-size: 14px;
-    line-height: 1.4;
+    line-height: 1.45;
   }
+  .back {
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 30;
+    border: 0;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 999px;
+    padding: 8px 14px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 650;
+    box-shadow: 0 8px 18px rgba(23, 50, 77, .22);
+    cursor: pointer;
+  }
+  .back[hidden] { display: none; }
+  body[data-screen="list"] .page.active,
+  body[data-screen="station"] .page.active,
+  body[data-screen="handoff"] .page.active { margin-top: 62px; }
   .page {
-    width: 1100px;
-    min-height: 760px;
-    margin: 24px auto;
+    width: min(1040px, calc(100% - 28px));
+    min-height: 720px;
+    margin: 18px auto 28px;
     background: var(--paper);
-    border: 1px solid #ccc;
-    padding: 28px 32px 24px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 26px 28px 22px;
+    box-shadow: 0 10px 30px rgba(23, 50, 77, .06);
   }
   h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.02em; }
   h2 { font-size: 16px; margin: 0 0 8px; }
@@ -36,33 +58,41 @@
   .kicker { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
   .row { display: flex; gap: 16px; }
   .card {
-    border: 1.5px solid var(--line);
+    border: 1px solid var(--line);
     background: var(--fill);
-    padding: 12px 14px;
+    border-radius: 14px;
+    padding: 14px 16px;
   }
   .note {
-    border: 1.5px dashed var(--line);
+    border: 1px solid var(--line);
     background: #fff;
+    border-radius: 12px;
     padding: 10px 12px;
     font-size: 12.5px;
   }
   .note strong { display: block; margin-bottom: 2px; }
   ol.flow { margin: 0; padding-left: 18px; }
   ol.flow li { margin: 0 0 8px; }
-  table { width: 100%; border-collapse: collapse; background: #fff; font-size: 13px; }
-  th, td { border: 1px solid #bdbdbd; padding: 7px 8px; text-align: left; vertical-align: top; }
-  th { background: #ececec; font-weight: 600; }
-  .flag { font-weight: 700; }
+  table { width: 100%; border-collapse: collapse; background: #fff; font-size: 13px; border-radius: 12px; overflow: hidden; }
+  th, td { border: 0; border-bottom: 1px solid var(--line); padding: 9px 8px; text-align: left; vertical-align: middle; }
+  th { background: #f7fafb; font-weight: 650; color: var(--muted); font-size: 12px; }
+  .pill { display: inline-block; border-radius: 999px; padding: 3px 8px; font-size: 12px; font-weight: 700; }
+  .pill.bikes { background: #fde8df; color: #9a3412; }
+  .pill.docks { background: #e3f3f6; color: #0f5f6b; }
+  .pill.watch { background: #f6f1e4; color: #7a6230; }
+  .pill.clear { background: #eef2f5; color: #5c6b76; }
   .app {
-    border: 2px solid var(--line);
-    background: #fafafa;
+    border: 1px solid var(--line);
+    background: #fbfcfd;
     min-height: 520px;
+    border-radius: 16px;
+    overflow: hidden;
   }
   .topbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1.5px solid var(--line);
+    border-bottom: 1px solid var(--line);
     padding: 10px 14px;
     background: #fff;
   }
@@ -71,30 +101,33 @@
   .body { display: flex; }
   .side {
     width: 210px;
-    border-right: 1.5px solid var(--line);
+    border-right: 1px solid var(--line);
     padding: 12px;
     background: #fff;
   }
   .side .item {
-    border: 1.5px solid var(--line);
-    padding: 8px;
-    margin-bottom: 8px;
-    background: var(--fill);
+    border: 1px solid transparent;
+    border-radius: 10px;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    background: transparent;
     font-size: 12.5px;
   }
-  .side .item.on { background: #fff; font-weight: 700; }
+  .side .item.on { background: #e7f3f6; color: var(--teal); font-weight: 700; }
   .main { flex: 1; padding: 14px; }
   .chips { display: flex; gap: 8px; margin-bottom: 12px; }
   .chip {
-    border: 1.5px solid var(--line);
-    padding: 4px 8px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px 10px;
     background: #fff;
     font-size: 12px;
   }
-  .chip.on { background: var(--ink); color: #fff; }
+  .chip.on { background: var(--ink); color: #fff; border-color: var(--ink); }
   .chart {
     height: 180px;
-    border: 1.5px solid var(--line);
+    border: 1px solid var(--line);
+    border-radius: 12px;
     background:
       linear-gradient(#fff, #fff) padding-box,
       repeating-linear-gradient(to top, transparent 0 35px, #ddd 35px 36px);
@@ -110,13 +143,14 @@
   .axis.y { left: 6px; top: 6px; }
   .axis.x { right: 8px; bottom: 4px; }
   .split { display: flex; gap: 12px; }
-  .box { flex: 1; border: 1.5px solid var(--line); background: #fff; padding: 10px; font-size: 12.5px; }
+  .box { flex: 1; border: 1px solid var(--line); border-radius: 12px; background: #fff; padding: 10px 12px; font-size: 12.5px; }
   .btn {
     display: inline-block;
-    border: 1.5px solid var(--line);
+    border: 1px solid var(--ink);
     background: var(--ink);
     color: #fff;
-    padding: 6px 10px;
+    border-radius: 999px;
+    padding: 8px 14px;
     font-size: 12.5px;
     margin-right: 8px;
   }
@@ -126,12 +160,14 @@
     display: inline-block;
     width: 18px;
     height: 18px;
-    border: 1.5px solid var(--line);
+    border: 0;
+    border-radius: 999px;
+    background: #e7f3f6;
+    color: var(--teal);
     text-align: center;
     font-size: 12px;
     font-weight: 700;
     margin-right: 4px;
-    background: #fff;
   }
   footer.pagefoot {
     margin-top: 14px;
@@ -140,20 +176,21 @@
   }
   .flowline {
     display: flex;
-    gap: 0;
+    gap: 8px;
     align-items: stretch;
     margin-top: 8px;
   }
   .step {
     flex: 1;
-    border: 1.5px solid var(--line);
+    border: 1px solid var(--line);
     background: var(--fill);
-    padding: 10px;
+    border-radius: 12px;
+    padding: 12px;
     font-size: 12.5px;
     position: relative;
   }
-  .step + .step { border-left: none; }
-  .step b { display: block; margin-bottom: 4px; }
+  .step b { display: block; margin-bottom: 4px; color: var(--ink); }
+  .step.link:hover { border-color: var(--teal); background: #fff; }
   .page { display: none; }
   .page.active { display: block; }
   .step.link, .side .item, .chip, .btn, tr.clickable { cursor: pointer; }
@@ -164,7 +201,7 @@
     font: inherit;
     cursor: pointer;
   }
-  button.btn { border: 1.5px solid var(--line); color: #fff; }
+  button.btn { border: 1px solid var(--ink); color: #fff; border-radius: 999px; }
   button.btn.ghost { color: var(--ink); }
   .status {
     margin: 10px 0 0;
@@ -179,7 +216,8 @@
   }
 </style>
 </head>
-<body>
+<body data-screen="flow">
+<button type="button" id="back" class="back" hidden data-go="flow">← Back</button>
 
 <section class="page active" data-screen="flow">
   <p class="kicker">SteelCycle · wireframe · user flow</p>
@@ -257,7 +295,7 @@
                 <td>07:00</td>
                 <td>12 of 23</td>
                 <td>+3 / hour</td>
-                <td>Watch</td>
+                <td><span class="pill watch">Watch</span></td>
               </tr>
               <tr data-hour="07:00" data-move="0" data-station="50 · Atwood &amp; Bates" data-action="Watch only" data-when="Before 07:00" data-why="Point path stays above the buffer">
                 <td><input type="checkbox" /></td>
@@ -266,7 +304,7 @@
                 <td>07:00</td>
                 <td>10 of 19</td>
                 <td>+2 / hour</td>
-                <td>Clear</td>
+                <td><span class="pill clear">Clear</span></td>
               </tr>
               <tr data-hour="07:00" data-move="1" data-station="13 · Sennott" data-action="Take bikes out" data-when="Before 07:00" data-why="Full-dock path from a 50% start">
                 <td><input type="checkbox" /></td>
@@ -275,7 +313,7 @@
                 <td>07:00</td>
                 <td>12 of 23</td>
                 <td>−5 / hour</td>
-                <td class="flag">Needs empty docks</td>
+                <td><span class="pill docks">Needs empty docks</span></td>
               </tr>
               <tr class="clickable" data-hour="08:00" data-move="1" data-go="station" data-station="20 · Parkview" data-action="Bring bikes in" data-when="Before 08:00" data-why="Low-stock path from a 50% start">
                 <td><input type="checkbox" checked /></td>
@@ -284,7 +322,7 @@
                 <td>08:00</td>
                 <td>12 of 23</td>
                 <td>+6 / hour</td>
-                <td class="flag">Needs bikes</td>
+                <td><span class="pill bikes">Needs bikes</span></td>
               </tr>
               <tr data-hour="08:00" data-move="1" data-station="50 · Atwood &amp; Bates" data-action="Bring bikes in" data-when="Before 08:00" data-why="Low-stock path from a 50% start">
                 <td><input type="checkbox" checked /></td>
@@ -293,7 +331,7 @@
                 <td>08:00</td>
                 <td>10 of 19</td>
                 <td>+4 / hour</td>
-                <td class="flag">Needs bikes</td>
+                <td><span class="pill bikes">Needs bikes</span></td>
               </tr>
               <tr data-hour="08:00" data-move="1" data-station="13 · Sennott" data-action="Take bikes out" data-when="Before 08:00" data-why="Full-dock path from a 50% start">
                 <td><input type="checkbox" checked /></td>
@@ -302,7 +340,7 @@
                 <td>08:00</td>
                 <td>12 of 23</td>
                 <td>−7 / hour</td>
-                <td class="flag">Needs empty docks</td>
+                <td><span class="pill docks">Needs empty docks</span></td>
               </tr>
               <tr data-hour="08:00" data-move="0" data-station="12 · O’Hara &amp; University" data-action="Watch only" data-when="Before 08:00" data-why="Point path stays above the buffer">
                 <td><input type="checkbox" /></td>
@@ -311,7 +349,7 @@
                 <td>08:00</td>
                 <td>12 of 23</td>
                 <td>−3 / hour</td>
-                <td>Watch</td>
+                <td><span class="pill watch">Watch</span></td>
               </tr>
               <tr data-hour="08:00" data-move="0" data-station="59 · TCS Hall" data-action="No move" data-when="Before 08:00" data-why="Point path stays above the buffer">
                 <td><input type="checkbox" /></td>
@@ -320,7 +358,7 @@
                 <td>08:00</td>
                 <td>10 of 19</td>
                 <td>−2 / hour</td>
-                <td>Clear</td>
+                <td><span class="pill clear">Clear</span></td>
               </tr>
               <tr data-hour="09:00" data-move="0" data-station="20 · Parkview" data-action="Watch only" data-when="Before 09:00" data-why="Point path stays above the buffer">
                 <td><input type="checkbox" /></td>
@@ -329,7 +367,7 @@
                 <td>09:00</td>
                 <td>12 of 23</td>
                 <td>+2 / hour</td>
-                <td>Watch</td>
+                <td><span class="pill watch">Watch</span></td>
               </tr>
               <tr data-hour="09:00" data-move="0" data-station="50 · Atwood &amp; Bates" data-action="No move" data-when="Before 09:00" data-why="Point path stays above the buffer">
                 <td><input type="checkbox" /></td>
@@ -338,7 +376,7 @@
                 <td>09:00</td>
                 <td>10 of 19</td>
                 <td>+1 / hour</td>
-                <td>Clear</td>
+                <td><span class="pill clear">Clear</span></td>
               </tr>
               <tr data-hour="09:00" data-move="0" data-station="13 · Sennott" data-action="No move" data-when="Before 09:00" data-why="Point path stays above the buffer">
                 <td><input type="checkbox" /></td>
@@ -347,7 +385,7 @@
                 <td>09:00</td>
                 <td>12 of 23</td>
                 <td>−2 / hour</td>
-                <td>Clear</td>
+                <td><span class="pill clear">Clear</span></td>
               </tr>
             </tbody>
           </table>
@@ -474,8 +512,24 @@ const handoffStatus = document.getElementById('handoff-status');
 let mode = 'move';
 let hour = '08:00';
 
+const backButton = document.getElementById('back');
+const backTo = { list: 'flow', station: 'list', handoff: 'list' };
+const backLabel = {
+  list: '← Overview',
+  station: '← Today’s list',
+  handoff: '← Today’s list'
+};
+
 function show(screen) {
   pages.forEach(page => page.classList.toggle('active', page.dataset.screen === screen));
+  document.body.dataset.screen = screen;
+  if (backTo[screen]) {
+    backButton.hidden = false;
+    backButton.dataset.go = backTo[screen];
+    backButton.textContent = backLabel[screen];
+  } else {
+    backButton.hidden = true;
+  }
   if (screen === 'handoff') renderHandoff();
   if (screen === 'list') updateCopyLabel();
 }
