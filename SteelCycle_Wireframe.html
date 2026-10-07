@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>SteelCycle wireframe — morning dispatch list</title>
+<style>
+  :root {
+    --ink: #1c1c1c;
+    --muted: #5c5c5c;
+    --line: #2a2a2a;
+    --fill: #f4f4f2;
+    --paper: #fff;
+    --flag: #1c1c1c;
+    --soft: #e7e7e4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #e8e8e6;
+    color: var(--ink);
+    font-family: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .page {
+    width: 1100px;
+    min-height: 760px;
+    margin: 24px auto;
+    background: var(--paper);
+    border: 1px solid #ccc;
+    padding: 28px 32px 24px;
+  }
+  h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.02em; }
+  h2 { font-size: 16px; margin: 0 0 8px; }
+  .sub { color: var(--muted); margin: 0 0 16px; font-size: 13px; }
+  .kicker { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+  .row { display: flex; gap: 16px; }
+  .card {
+    border: 1.5px solid var(--line);
+    background: var(--fill);
+    padding: 12px 14px;
+  }
+  .note {
+    border: 1.5px dashed var(--line);
+    background: #fff;
+    padding: 10px 12px;
+    font-size: 12.5px;
+  }
+  .note strong { display: block; margin-bottom: 2px; }
+  ol.flow { margin: 0; padding-left: 18px; }
+  ol.flow li { margin: 0 0 8px; }
+  table { width: 100%; border-collapse: collapse; background: #fff; font-size: 13px; }
+  th, td { border: 1px solid #bdbdbd; padding: 7px 8px; text-align: left; vertical-align: top; }
+  th { background: #ececec; font-weight: 600; }
+  .flag { font-weight: 700; }
+  .app {
+    border: 2px solid var(--line);
+    background: #fafafa;
+    min-height: 520px;
+  }
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1.5px solid var(--line);
+    padding: 10px 14px;
+    background: #fff;
+  }
+  .brand { font-weight: 700; }
+  .meta { font-size: 12px; color: var(--muted); }
+  .body { display: flex; }
+  .side {
+    width: 210px;
+    border-right: 1.5px solid var(--line);
+    padding: 12px;
+    background: #fff;
+  }
+  .side .item {
+    border: 1.5px solid var(--line);
+    padding: 8px;
+    margin-bottom: 8px;
+    background: var(--fill);
+    font-size: 12.5px;
+  }
+  .side .item.on { background: #fff; font-weight: 700; }
+  .main { flex: 1; padding: 14px; }
+  .chips { display: flex; gap: 8px; margin-bottom: 12px; }
+  .chip {
+    border: 1.5px solid var(--line);
+    padding: 4px 8px;
+    background: #fff;
+    font-size: 12px;
+  }
+  .chip.on { background: var(--ink); color: #fff; }
+  .chart {
+    height: 180px;
+    border: 1.5px solid var(--line);
+    background:
+      linear-gradient(#fff, #fff) padding-box,
+      repeating-linear-gradient(to top, transparent 0 35px, #ddd 35px 36px);
+    position: relative;
+    margin-bottom: 12px;
+  }
+  .chart svg { width: 100%; height: 100%; display: block; }
+  .axis {
+    position: absolute;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .axis.y { left: 6px; top: 6px; }
+  .axis.x { right: 8px; bottom: 4px; }
+  .split { display: flex; gap: 12px; }
+  .box { flex: 1; border: 1.5px solid var(--line); background: #fff; padding: 10px; font-size: 12.5px; }
+  .btn {
+    display: inline-block;
+    border: 1.5px solid var(--line);
+    background: var(--ink);
+    color: #fff;
+    padding: 6px 10px;
+    font-size: 12.5px;
+    margin-right: 8px;
+  }
+  .btn.ghost { background: #fff; color: var(--ink); }
+  .callouts { width: 250px; display: flex; flex-direction: column; gap: 10px; }
+  .num {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--line);
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    margin-right: 4px;
+    background: #fff;
+  }
+  footer.pagefoot {
+    margin-top: 14px;
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+  .flowline {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+    margin-top: 8px;
+  }
+  .step {
+    flex: 1;
+    border: 1.5px solid var(--line);
+    background: var(--fill);
+    padding: 10px;
+    font-size: 12.5px;
+    position: relative;
+  }
+  .step + .step { border-left: none; }
+  .step b { display: block; margin-bottom: 4px; }
+  .page { display: none; }
+  .page.active { display: block; }
+  .step.link, .side .item, .chip, .btn, tr.clickable { cursor: pointer; }
+  .step.link:hover, .side .item:hover { background: #fff; }
+  tr.clickable:hover td { background: #f7f7f5; }
+  tr[hidden] { display: none; }
+  button.btn, button.chip, button.linkish {
+    font: inherit;
+    cursor: pointer;
+  }
+  button.btn { border: 1.5px solid var(--line); color: #fff; }
+  button.btn.ghost { color: var(--ink); }
+  .status {
+    margin: 10px 0 0;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  @page { size: 13in 9.2in; margin: 0.35in; }
+  @media print {
+    body { background: #fff; }
+    .page { display: block; margin: 0; border: none; width: auto; min-height: auto; page-break-after: always; }
+    .page:last-child { page-break-after: auto; }
+  }
+</style>
+</head>
+<body>
+
+<section class="page active" data-screen="flow">
+  <p class="kicker">SteelCycle · wireframe · user flow</p>
+  <h1>Morning dispatch list for the Oakland corridor</h1>
+  <p class="sub">One user, one job. The person who opens the app is the POGOH early-shift dispatcher. The person who pays is the operations lead. The job is to decide, before 07:00, which of five stations need bikes and which need empty docks at 07:00, 08:00, and 09:00.</p>
+
+  <div class="flowline">
+    <div class="step link" data-go="list"><b>1. Open at 04:00</b>Forecast is already issued. No model settings on this screen.</div>
+    <div class="step link" data-go="list"><b>2. Read the list</b>Five stations. One row is a station, an hour, a net flow, and one flag.</div>
+    <div class="step link" data-go="station"><b>3. Open a station</b>24-hour net-flow chart, 80% band, weather, and last week’s same hours.</div>
+    <div class="step link" data-go="handoff"><b>4. Copy the rows</b>Selected rows go onto the drivers’ existing sheet. The app does not assign a truck.</div>
+    <div class="step"><b>5. After the peak</b>Dispatcher marks which flagged moves were actually made. That log is the next measurement.</div>
+  </div>
+
+  <div class="row" style="margin-top:18px">
+    <div class="card" style="flex:1.2">
+      <h2>What the product does</h2>
+      <ol class="flow">
+        <li><b>Forecast dashboard.</b> Issued at 04:00 Pittsburgh time. Window is 07:00–09:00. Target is hourly departures minus arrivals.</li>
+        <li><b>Inventory flags.</b> A stated 04:00 inventory (today: half of dock capacity) turns net flow into “needs bikes” or “needs empty docks.” Departure stations use the low-stock flag. Arrival stations use the full-dock flag.</li>
+        <li><b>Station forecast.</b> Point path plus the 80% interval, compared with last week’s same hour. The interval is visible so the dispatcher can see a spike the point forecast shrinks.</li>
+        <li><b>Hand-off, not routing.</b> Export or copy into the worksheet drivers already use. No route, no stop order, no campus dashboard.</li>
+      </ol>
+    </div>
+    <div class="note" style="flex:0.8">
+      <strong>What has to exist outside the app</strong>
+      A live dock feed (GBFS) replaces the half-capacity start. Until it is connected, every flag is labeled “assumed start.” The driver’s schedule and work order stay in the system POGOH already uses. Weather forecast and the CMU/Pitt calendar are inputs to the model, not screens the dispatcher edits.
+    </div>
+  </div>
+  <footer class="pagefoot">Stations in this pilot: 20 Boulevard of the Allies &amp; Parkview, 50 Atwood &amp; Bates, 13 S Bouquet &amp; Sennott, 12 O’Hara &amp; University Place, 59 Forbes at TCS Hall. Counts on the screens are one sample morning, issued at 04:00 from an assumed half-full start.</footer>
+</section>
+
+<section class="page" data-screen="list">
+  <p class="kicker">Screen 1 of 3 · primary job</p>
+  <h1>04:00 list — which stations to move before the peak</h1>
+  <p class="sub">This is the screen the dispatcher uses. Everything else is a drill-down or an export.</p>
+  <div class="row">
+    <div class="app" style="flex:1">
+      <div class="topbar">
+        <div class="brand">SteelCycle · Oakland corridor</div>
+        <div class="meta">Issued Tue 04:00 · Act on 07:00–09:00 · 3 hours of lead time</div>
+      </div>
+      <div class="body">
+        <aside class="side">
+          <div class="item on" data-go="list">Today’s list</div>
+          <div class="item" data-go="station">Station chart</div>
+          <div class="item" data-go="handoff">Copy to dispatch sheet</div>
+          <div class="item">Data status<br><span class="meta">Start inventory: assumed 50% of docks. Live feed not connected.</span></div>
+        </aside>
+        <div class="main">
+          <div class="chips" id="filters">
+            <button type="button" class="chip on" data-filter="move">Needs a move</button>
+            <button type="button" class="chip" data-filter="all">All five stations</button>
+            <button type="button" class="chip" data-hour="07:00">07:00</button>
+            <button type="button" class="chip on" data-hour="08:00">08:00</button>
+            <button type="button" class="chip" data-hour="09:00">09:00</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Station</th>
+                <th>Role</th>
+                <th>Hour</th>
+                <th>Start bikes (assumed)</th>
+                <th>Predicted net flow</th>
+                <th>Flag</th>
+              </tr>
+            </thead>
+            <tbody id="list-body">
+              <tr data-hour="07:00" data-move="0" data-station="20 · Parkview" data-action="Watch only" data-when="Before 07:00" data-why="Point path stays above the buffer">
+                <td><input type="checkbox" /></td>
+                <td>20 · Parkview</td>
+                <td>Bikes leave</td>
+                <td>07:00</td>
+                <td>12 of 23</td>
+                <td>+3 / hour</td>
+                <td>Watch</td>
+              </tr>
+              <tr data-hour="07:00" data-move="0" data-station="50 · Atwood &amp; Bates" data-action="Watch only" data-when="Before 07:00" data-why="Point path stays above the buffer">
+                <td><input type="checkbox" /></td>
+                <td>50 · Atwood &amp; Bates</td>
+                <td>Bikes leave</td>
+                <td>07:00</td>
+                <td>10 of 19</td>
+                <td>+2 / hour</td>
+                <td>Clear</td>
+              </tr>
+              <tr data-hour="07:00" data-move="1" data-station="13 · Sennott" data-action="Take bikes out" data-when="Before 07:00" data-why="Full-dock path from a 50% start">
+                <td><input type="checkbox" /></td>
+                <td>13 · Sennott</td>
+                <td>Bikes arrive</td>
+                <td>07:00</td>
+                <td>12 of 23</td>
+                <td>−5 / hour</td>
+                <td class="flag">Needs empty docks</td>
+              </tr>
+              <tr class="clickable" data-hour="08:00" data-move="1" data-go="station" data-station="20 · Parkview" data-action="Bring bikes in" data-when="Before 08:00" data-why="Low-stock path from a 50% start">
+                <td><input type="checkbox" checked /></td>
+                <td>20 · Parkview</td>
+                <td>Bikes leave</td>
+                <td>08:00</td>
+                <td>12 of 23</td>
+                <td>+6 / hour</td>
+                <td class="flag">Needs bikes</td>
+              </tr>
+              <tr data-hour="08:00" data-move="1" data-station="50 · Atwood &amp; Bates" data-action="Bring bikes in" data-when="Before 08:00" data-why="Low-stock path from a 50% start">
+                <td><input type="checkbox" checked /></td>
+                <td>50 · Atwood &amp; Bates</td>
+                <td>Bikes leave</td>
+                <td>08:00</td>
+                <td>10 of 19</td>
+                <td>+4 / hour</td>
+                <td class="flag">Needs bikes</td>
+              </tr>
+              <tr data-hour="08:00" data-move="1" data-station="13 · Sennott" data-action="Take bikes out" data-when="Before 08:00" data-why="Full-dock path from a 50% start">
+                <td><input type="checkbox" checked /></td>
+                <td>13 · Sennott</td>
+                <td>Bikes arrive</td>
+                <td>08:00</td>
+                <td>12 of 23</td>
+                <td>−7 / hour</td>
+                <td class="flag">Needs empty docks</td>
+              </tr>
+              <tr data-hour="08:00" data-move="0" data-station="12 · O’Hara &amp; University" data-action="Watch only" data-when="Before 08:00" data-why="Point path stays above the buffer">
+                <td><input type="checkbox" /></td>
+                <td>12 · O’Hara &amp; University</td>
+                <td>Bikes arrive</td>
+                <td>08:00</td>
+                <td>12 of 23</td>
+                <td>−3 / hour</td>
+                <td>Watch</td>
+              </tr>
+              <tr data-hour="08:00" data-move="0" data-station="59 · TCS Hall" data-action="No move" data-when="Before 08:00" data-why="Point path stays above the buffer">
+                <td><input type="checkbox" /></td>
+                <td>59 · TCS Hall</td>
+                <td>Bikes arrive</td>
+                <td>08:00</td>
+                <td>10 of 19</td>
+                <td>−2 / hour</td>
+                <td>Clear</td>
+              </tr>
+              <tr data-hour="09:00" data-move="0" data-station="20 · Parkview" data-action="Watch only" data-when="Before 09:00" data-why="Point path stays above the buffer">
+                <td><input type="checkbox" /></td>
+                <td>20 · Parkview</td>
+                <td>Bikes leave</td>
+                <td>09:00</td>
+                <td>12 of 23</td>
+                <td>+2 / hour</td>
+                <td>Watch</td>
+              </tr>
+              <tr data-hour="09:00" data-move="0" data-station="50 · Atwood &amp; Bates" data-action="No move" data-when="Before 09:00" data-why="Point path stays above the buffer">
+                <td><input type="checkbox" /></td>
+                <td>50 · Atwood &amp; Bates</td>
+                <td>Bikes leave</td>
+                <td>09:00</td>
+                <td>10 of 19</td>
+                <td>+1 / hour</td>
+                <td>Clear</td>
+              </tr>
+              <tr data-hour="09:00" data-move="0" data-station="13 · Sennott" data-action="No move" data-when="Before 09:00" data-why="Point path stays above the buffer">
+                <td><input type="checkbox" /></td>
+                <td>13 · Sennott</td>
+                <td>Bikes arrive</td>
+                <td>09:00</td>
+                <td>12 of 23</td>
+                <td>−2 / hour</td>
+                <td>Clear</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="meta" style="margin:10px 0">Net flow = departures − arrivals. Positive means the station loses bikes. A flag uses the point forecast rolled forward from the assumed 04:00 count. It is not a truck order.</p>
+          <button type="button" class="btn" id="copy-rows" data-go="handoff">Copy 3 checked rows</button>
+          <button type="button" class="btn ghost" data-go="station">Open station chart</button>
+          <p class="status" id="list-status"></p>
+        </div>
+      </div>
+    </div>
+    <div class="callouts">
+      <div class="note"><span class="num">1</span><strong>Filter is the decision, not a catalog.</strong> Default view is only the rows that need a move in the peak hours.</div>
+      <div class="note"><span class="num">2</span><strong>One flag per station role.</strong> Outflow stations are checked for low bikes. Inflow stations are checked for full docks.</div>
+      <div class="note"><span class="num">3</span><strong>Assumed inventory is visible.</strong> Until GBFS is connected, the count is half of capacity and the label says so.</div>
+      <div class="note"><span class="num">4</span><strong>Next action is the existing sheet.</strong> Checking a row selects it for export. The app does not sequence the truck.</div>
+    </div>
+  </div>
+</section>
+
+<section class="page" data-screen="station">
+  <p class="kicker">Screen 2 of 3 · why this row is flagged</p>
+  <h1>Station 20 · Parkview — forecast issued at 04:00</h1>
+  <p class="sub">The dispatcher opens this only when a flag needs a second look. The chart is net flow, not a sales dashboard.</p>
+  <div class="row">
+    <div class="app" style="flex:1">
+      <div class="topbar">
+        <button type="button" class="brand linkish" data-go="list" style="background:none;border:none;padding:0">← Back to today’s list</button>
+        <div class="meta">Station 20 · 23 docks · bikes leave in the morning</div>
+      </div>
+      <div class="main">
+        <div class="split" style="margin-bottom:12px">
+          <div class="box"><b>08:00 flag</b><br>Needs bikes. Point path crosses the 2-bike buffer.</div>
+          <div class="box"><b>Weather at issue time</b><br>Forecast rain 0.1 in, 64°F. Already inside the model.</div>
+          <div class="box"><b>Calendar</b><br>CMU/Pitt term week. Already inside the model.</div>
+        </div>
+        <div class="chart" aria-label="Sample 24-hour net flow chart">
+          <span class="axis y">Net flow (bikes / hour)</span>
+          <span class="axis x">04:00 → 03:00 next day · peak shaded 07–09</span>
+          <svg viewBox="0 0 640 160" preserveAspectRatio="none">
+            <rect x="150" y="8" width="70" height="144" fill="#ececec"/>
+            <path d="M20,90 C80,88 120,70 160,55 C190,40 210,48 240,78 C300,110 380,100 460,96 C540,92 600,94 620,95" fill="none" stroke="#9a9a9a" stroke-width="8" stroke-linecap="round"/>
+            <path d="M20,78 C80,76 120,60 160,42 C190,28 210,36 240,62 C300,90 380,86 460,84 C540,82 600,83 620,84" fill="none" stroke="#1c1c1c" stroke-width="2.5"/>
+            <path d="M20,78 L80,80 L140,74 L200,70 L260,76 L320,78 L400,80 L480,79 L560,80 L620,81" fill="none" stroke="#1c1c1c" stroke-dasharray="4 3" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="split">
+          <div class="box"><b>Solid line</b> Point forecast of net flow.</div>
+          <div class="box"><b>Band</b> 80% interval. A spike can sit in the band and outside the point.</div>
+          <div class="box"><b>Dashed line</b> Last week, same hour. This is the bar the model has to beat.</div>
+        </div>
+        <p style="margin:12px 0 0"><button type="button" class="btn" id="keep-row" data-go="handoff">Keep this row on the list</button> <button type="button" class="btn ghost" id="drop-flag">Drop the flag for today</button></p>
+        <p class="status" id="station-status"></p>
+      </div>
+    </div>
+    <div class="callouts">
+      <div class="note"><span class="num">5</span><strong>Lead time stays on screen.</strong> The chart starts at the 04:00 issue, not at “now,” so the 07:00 hour is still in the future.</div>
+      <div class="note"><span class="num">6</span><strong>The comparison is last week.</strong> Same station, same hour. That is the forecast this list has to beat.</div>
+      <div class="note"><span class="num">7</span><strong>Weather and term are inputs.</strong> The dispatcher reads them. They do not retrain the model from this screen.</div>
+      <div class="note"><span class="num">8</span><strong>Override is a note, not a new model.</strong> Dropping a flag records a dispatcher decision for the later truck log.</div>
+    </div>
+  </div>
+</section>
+
+<section class="page" data-screen="handoff">
+  <p class="kicker">Screen 3 of 3 · hand-off</p>
+  <h1>Copy onto the sheet the drivers already use</h1>
+  <p class="sub">Full value needs the live dock feed and the existing work order. This screen is the seam between them. It is not a router.</p>
+  <div class="row">
+    <div class="app" style="flex:1">
+      <div class="topbar">
+        <div class="brand" id="handoff-title">Hand-off · 3 rows</div>
+        <div class="meta">Does not set stop order or drive time</div>
+      </div>
+      <div class="main">
+        <table>
+          <thead>
+            <tr>
+              <th>From the list</th>
+              <th>Suggested move</th>
+              <th>When</th>
+              <th>Why the flag fired</th>
+              <th>Goes to</th>
+            </tr>
+          </thead>
+          <tbody id="handoff-body"></tbody>
+        </table>
+        <div class="split" style="margin-top:12px">
+          <div class="box">
+            <b>Export</b><br>
+            CSV or copy. Columns match a paper or spreadsheet dispatch row: station, action, hour, flag reason.
+            <p style="margin:8px 0 0"><button type="button" class="btn" id="confirm-copy">Copy rows</button> <button type="button" class="btn ghost" data-go="list">Back to today’s list</button></p>
+            <p class="status" id="handoff-status"></p>
+          </div>
+          <div class="box">
+            <b>Still outside this product</b><br>
+            Live docks (GBFS) so tomorrow’s start count is real.<br>
+            Driver schedule and truck capacity, which stay in the current work-order tool.<br>
+            A log of whether the truck moved, so the next backtest can score the decision.
+          </div>
+        </div>
+        <div class="note" style="margin-top:12px">
+          <strong>End-of-shift check, same screen, after 09:00</strong>
+          For each copied row: moved / not moved. This does not optimize a route. It records the decision the August holdout cannot see, because that holdout has trips and no truck log.
+        </div>
+      </div>
+    </div>
+    <div class="callouts">
+      <div class="note"><span class="num">9</span><strong>The buyer’s workflow stays.</strong> Operations already has a sheet. SteelCycle adds rows to it.</div>
+      <div class="note"><span class="num">10</span><strong>No path, no minutes saved.</strong> This screen does not set a route or a drive time. Truck minutes are not part of the hand-off.</div>
+      <div class="note"><span class="num">11</span><strong>Dependency is labeled.</strong> Half-capacity start is a product state, not a hidden assumption.</div>
+    </div>
+  </div>
+</section>
+
+<script>
+const pages = document.querySelectorAll('.page');
+const listBody = document.getElementById('list-body');
+const copyButton = document.getElementById('copy-rows');
+const listStatus = document.getElementById('list-status');
+const stationStatus = document.getElementById('station-status');
+const handoffBody = document.getElementById('handoff-body');
+const handoffTitle = document.getElementById('handoff-title');
+const handoffStatus = document.getElementById('handoff-status');
+let mode = 'move';
+let hour = '08:00';
+
+function show(screen) {
+  pages.forEach(page => page.classList.toggle('active', page.dataset.screen === screen));
+  if (screen === 'handoff') renderHandoff();
+  if (screen === 'list') updateCopyLabel();
+}
+
+function checkedRows() {
+  return [...listBody.querySelectorAll('tr')].filter(row => row.querySelector('input').checked);
+}
+
+function updateCopyLabel() {
+  const count = checkedRows().length;
+  copyButton.textContent = 'Copy ' + count + ' checked row' + (count === 1 ? '' : 's');
+}
+
+function applyFilter() {
+  let visible = 0;
+  listBody.querySelectorAll('tr').forEach(row => {
+    const hourOk = row.dataset.hour === hour;
+    const moveOk = mode === 'all' || row.dataset.move === '1';
+    row.hidden = !(hourOk && moveOk);
+    if (!row.hidden) visible += 1;
+  });
+  listStatus.textContent = visible ? '' : 'No station needs a move at ' + hour + '.';
+}
+
+function renderHandoff() {
+  const rows = checkedRows();
+  handoffTitle.textContent = 'Hand-off · ' + rows.length + ' row' + (rows.length === 1 ? '' : 's');
+  handoffBody.replaceChildren();
+  if (!rows.length) {
+    const empty = document.createElement('tr');
+    empty.innerHTML = '<td colspan="5">No rows checked. Go back and select the stations to move.</td>';
+    handoffBody.appendChild(empty);
+    return;
+  }
+  rows.forEach(row => {
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td>' + row.dataset.station + '</td>' +
+      '<td>' + row.dataset.action + '</td>' +
+      '<td>' + row.dataset.when + '</td>' +
+      '<td>' + row.dataset.why + '</td>' +
+      '<td>Driver sheet, row added</td>';
+    handoffBody.appendChild(tr);
+  });
+}
+
+document.addEventListener('click', event => {
+  const checkbox = event.target.closest('input[type="checkbox"]');
+  if (checkbox) {
+    event.stopPropagation();
+    updateCopyLabel();
+    return;
+  }
+  const go = event.target.closest('[data-go]');
+  if (go) show(go.dataset.go);
+});
+
+document.getElementById('filters').addEventListener('click', event => {
+  const chip = event.target.closest('.chip');
+  if (!chip) return;
+  if (chip.dataset.filter) {
+    mode = chip.dataset.filter;
+    document.querySelectorAll('#filters [data-filter]').forEach(button => {
+      button.classList.toggle('on', button === chip);
+    });
+  }
+  if (chip.dataset.hour) {
+    hour = chip.dataset.hour;
+    document.querySelectorAll('#filters [data-hour]').forEach(button => {
+      button.classList.toggle('on', button === chip);
+    });
+  }
+  applyFilter();
+});
+
+document.getElementById('keep-row').addEventListener('click', () => {
+  const parkview = listBody.querySelector('tr[data-go="station"] input');
+  parkview.checked = true;
+  stationStatus.textContent = '';
+});
+
+document.getElementById('drop-flag').addEventListener('click', () => {
+  const parkview = listBody.querySelector('tr[data-go="station"] input');
+  parkview.checked = false;
+  updateCopyLabel();
+  stationStatus.textContent = 'Station 20 dropped for today. Noted for the truck log. The model is unchanged.';
+});
+
+document.getElementById('confirm-copy').addEventListener('click', () => {
+  const count = checkedRows().length;
+  handoffStatus.textContent = count
+    ? 'Copied ' + count + ' row' + (count === 1 ? '' : 's') + ' onto the driver sheet. No route or stop order was set.'
+    : 'Nothing was copied.';
+});
+
+applyFilter();
+updateCopyLabel();
+</script>
+
+</body>
+</html>
